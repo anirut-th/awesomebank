@@ -17,6 +17,7 @@ namespace AwesomeBankAPI.DTOs
     public class AccountWriteDto
     {
         public Guid CustomerId { get; set; }
+        public string Name { get; set; }
         public decimal BalanceAmount { get; set; }
     }
 }

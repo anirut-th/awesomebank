@@ -65,6 +65,7 @@ namespace AwesomeBankAPI.Controllers
 
                 var accountDto = new AccountWriteDto
                 {
+                    Name = customer.FullName,
                     CustomerId = customer.Id,
                     BalanceAmount = 0 //initial with 0, the initialAmount will apply after create a transaction. 
                 };
@@ -87,6 +88,31 @@ namespace AwesomeBankAPI.Controllers
             {
                 return StatusCode((int)HttpStatusCode.InternalServerError);
             }
+        }
+
+        [HttpPost]
+        [Route("deposit")]
+        public ActionResult MakeDeposit(string accountId, decimal amount)
+        {
+            try
+            {
+                Guid Id = Guid.Parse(accountId);
+                var account = _accountService.GetAccount(Id);
+                if (account == null)
+                {
+                    return NotFound("Account not found");
+                }
+
+                //Create deposit transaction
+                Transaction transaction = _transactionService.MakeDeposit(account.Id, amount);
+                if (transaction == null)
+                {
+                    throw new Exception("Unable to create transaction");
+                }
+
+                return Ok("Success");
+            }
+            catch { return StatusCode((int)HttpStatusCode.InternalServerError); }
         }
     }
 }
