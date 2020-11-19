@@ -8,12 +8,15 @@ using System.Threading.Tasks;
 
 namespace AwesomeBankAPI.MapProfile
 {
-    public class CustomerMapProfile : Profile
+    public class AutoMapProfile : Profile
     {
-        public CustomerMapProfile()
+        public AutoMapProfile()
         {
             CreateMap<Customer, CustomerReadDto>();
             CreateMap<CustomerWriteDto, Customer>();
+
+            CreateMap<Account, AccountReadDto>();
+            CreateMap<AccountWriteDto, Account>();
         }
     }
 }

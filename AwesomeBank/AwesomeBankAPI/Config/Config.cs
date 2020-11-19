@@ -18,5 +18,7 @@ namespace AwesomeBankAPI.Config
             SUCCESS = 1,
             ERROR = 0
         }
+
+        public const decimal DEPOSIT_FEE = 0.1M;
     }
 }

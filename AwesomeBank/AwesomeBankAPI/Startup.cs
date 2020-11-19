@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using AutoMapper;
 
 namespace AwesomeBankAPI
 {
@@ -33,6 +34,7 @@ namespace AwesomeBankAPI
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<ICustomerService, CustomerService>();
 
             services.AddScoped<IAccountRepository, MockAccountRepository>();
             services.AddScoped<ICustomerRepository, MockCustomerRepository>();

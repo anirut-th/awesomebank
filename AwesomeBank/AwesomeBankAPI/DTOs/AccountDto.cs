@@ -3,17 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AwesomeBankAPI.Models
+namespace AwesomeBankAPI.DTOs
 {
-    public class Account
+    public class AccountReadDto
     {
         public Guid Id { get; set; }
         public Guid CustomerId { get; set; }
         public string Iban { get; set; }
         public string Name { get; set; }
         public decimal BalanceAmount { get; set; }
-        public bool IsActive { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public DateTime UpdatedDate { get; set; }
+    }
+
+    public class AccountWriteDto
+    {
+        public Guid CustomerId { get; set; }
+        public decimal BalanceAmount { get; set; }
     }
 }
