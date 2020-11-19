@@ -12,5 +12,6 @@ namespace AwesomeBankAPI.Services.Interface
         Account CreateAccount(Account account);
         bool ValidateIBAN(string iban);
         string GenerateIBAN();
+        bool ApplyToBalance(Account account, decimal amount);
     }
 }

@@ -45,6 +45,27 @@ namespace AwesomeBankAPI.Services
             return _accountRepository.GetById(Id);
         }
 
+        public bool ApplyToBalance(Account account, decimal amount)
+        {
+            try
+            {
+                var finalAmount = account.BalanceAmount + amount;
+                if (finalAmount < 0)
+                {
+                    return false;
+                }
+                account.BalanceAmount = finalAmount;
+                account.UpdatedDate = DateTime.Now;
+                var result = _accountRepository.Update(account);
+                if (result == (int)GlobalConfig.Result.SUCCESS)
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex) { throw ex; }
+        }
+
         public bool ValidateIBAN(string iban)
         {
             throw new NotImplementedException();

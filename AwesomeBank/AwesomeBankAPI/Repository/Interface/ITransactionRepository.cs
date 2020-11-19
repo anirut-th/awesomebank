@@ -6,7 +6,7 @@ using AwesomeBankAPI.Models;
 
 namespace AwesomeBankAPI.Repository.Interface
 {
-    interface ITransactionRepository : IGenericRepository<Transaction>
+    public interface ITransactionRepository : IGenericRepository<Transaction>
     {
     }
 }
