@@ -97,14 +97,30 @@ namespace AwesomeBankAPI.Controllers
             try
             {
                 Guid Id = Guid.Parse(accountId);
-                var account = _accountService.GetAccount(Id);
-                if (account == null)
-                {
-                    return NotFound("Account not found");
-                }
 
                 //Create deposit transaction
-                Transaction transaction = _transactionService.MakeDeposit(account.Id, amount);
+                Transaction transaction = _transactionService.MakeDeposit(Id, amount);
+                if (transaction == null)
+                {
+                    throw new Exception("Unable to create transaction");
+                }
+
+                return Ok("Success");
+            }
+            catch { return StatusCode((int)HttpStatusCode.InternalServerError); }
+        }
+
+        [HttpPost]
+        [Route("transfer")]
+        public ActionResult MakeTransfer(string senderAccountId, string receiverAccountId, decimal amount)
+        {
+            try
+            {
+                Guid _senderAccountId = Guid.Parse(senderAccountId);
+                Guid _receiverAccountId = Guid.Parse(receiverAccountId);
+                
+                //Create deposit transaction
+                Transaction transaction = _transactionService.MakeTransfer(_senderAccountId, _receiverAccountId, amount);
                 if (transaction == null)
                 {
                     throw new Exception("Unable to create transaction");
