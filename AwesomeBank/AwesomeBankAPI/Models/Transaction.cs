@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using static AwesomeBankAPI.Config.GolbalConfig;
+using static AwesomeBankAPI.Config.GlobalConfig;
 
 namespace AwesomeBankAPI.Models
 {
@@ -16,7 +16,6 @@ namespace AwesomeBankAPI.Models
         public Guid ActionByCustomerId { get; set; }
         public string Description { get; set; }
         public bool IsActive { get; set; }
-        public string CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
     }
 }
