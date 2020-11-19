@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AwesomeBankAPI.Repository.Interface;
+using AwesomeBankAPI.Config;
 
 namespace AwesomeBankAPI.Repository
 {
@@ -18,7 +19,6 @@ namespace AwesomeBankAPI.Repository
                 Email = "John@email.com",
                 FullName = "John Doe",
                 IsActive = true,
-                CreatedBy = "System",
                 CreatedDate = DateTime.Now
             },
             new Customer
@@ -27,7 +27,6 @@ namespace AwesomeBankAPI.Repository
                 Email = "Rami@email.com",
                 FullName = "Rami Horn",
                 IsActive = true,
-                CreatedBy = "System",
                 CreatedDate = DateTime.Now
             }
         };

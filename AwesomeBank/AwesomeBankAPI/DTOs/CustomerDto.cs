@@ -3,14 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AwesomeBankAPI.Models
+namespace AwesomeBankAPI.DTOs
 {
-    public class Customer
+    public class CustomerReadDto
     {
         public Guid Id { get; set; }
         public string FullName { get; set; }
         public string Email { get; set; }
-        public bool IsActive { get; set; }
-        public DateTime CreatedDate { get; set; }
+    }
+
+    public class CustomerWriteDto
+    {
+        public string FullName { get; set; }
+        public string Email { get; set; }
     }
 }

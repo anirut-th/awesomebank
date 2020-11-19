@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AwesomeBankAPI.Repository.Interface;
+using AwesomeBankAPI.Config;
 
 namespace AwesomeBankAPI.Repository
 {
@@ -20,7 +21,6 @@ namespace AwesomeBankAPI.Repository
                 CustomerId = Guid.Parse("AE716554-6B93-434E-96F6-8E9229C6644D"),
                 Name = "John Doe",
                 IsActive = true,
-                CreatedBy = "System",
                 CreatedDate = DateTime.Now
             },
 
@@ -32,7 +32,6 @@ namespace AwesomeBankAPI.Repository
                 CustomerId = Guid.Parse("6C3E8C57-33AB-4553-A0F3-DDAD208ABF25"),
                 Name = "Rami Horn",
                 IsActive = true,
-                CreatedBy = "System",
                 CreatedDate = DateTime.Now
             }
         };
