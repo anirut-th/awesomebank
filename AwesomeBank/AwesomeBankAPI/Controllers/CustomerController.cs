@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using AwesomeBankAPI.DTOs;
 using AwesomeBankAPI.Models;
 using AwesomeBankAPI.Services.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,27 +16,28 @@ namespace AwesomeBankAPI.Controllers
 {
     [Route("api/customer")]
     [ApiController]
-    public class CustomerController : ControllerBase
+    public class CustomerController : BaseApiController
     {
         private readonly ICustomerService _customerService;
         private readonly IMapper _mapper;
 
-        public CustomerController(ICustomerService customerService, IMapper mapper)
+        public CustomerController(ICustomerService customerService, IMapper mapper) : base(customerService)
         {
             _customerService = customerService;
             _mapper = mapper;
         }
 
-        [HttpGet("{id}")]
-        public ActionResult<CustomerReadDto> GetCustomer(string id)
+        [HttpGet]
+        [Authorize]
+        [Route("profile")]
+        public ActionResult<CustomerProfileDto> GetCustomer()
         {
             try
             {
-                Guid _Id = Guid.Parse(id);
-                var result = _customerService.GetCustomer(_Id);
+                var result = base.CustomerData;
                 if (result != null)
                 {
-                    return Ok(_mapper.Map<CustomerReadDto>(result));
+                    return Ok(_mapper.Map<CustomerProfileDto>(result));
                 }
                 return NotFound();
             }

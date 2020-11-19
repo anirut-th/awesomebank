@@ -9,6 +9,7 @@ namespace AwesomeBankAPI.Services.Interface
     public interface IAccountService
     {
         Account GetAccount(Guid Id);
+        Account GetAccount(string Iban);
         Account CreateAccount(Account account);
         bool ValidateIBAN(string iban);
         string GenerateIBAN();

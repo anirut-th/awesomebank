@@ -7,14 +7,16 @@ using AutoMapper;
 using AwesomeBankAPI.DTOs;
 using AwesomeBankAPI.Models;
 using AwesomeBankAPI.Services.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AwesomeBankAPI.Controllers
 {
     [Route("api/account")]
+    [Authorize]
     [ApiController]
-    public class AccountController : ControllerBase
+    public class AccountController : BaseApiController
     {
         private readonly IAccountService _accountService;
         private readonly ICustomerService _customerService;
@@ -23,8 +25,9 @@ namespace AwesomeBankAPI.Controllers
         public AccountController(IAccountService accountService, 
             IMapper mapper, 
             ICustomerService customerService,
-            ITransactionService transactionService)
+            ITransactionService transactionService) : base(customerService)
         {
+           
             _accountService = accountService;
             _mapper = mapper;
             _customerService = customerService;
@@ -45,22 +48,14 @@ namespace AwesomeBankAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateAccount(string fullName, string email, decimal initialAmount)
+        public ActionResult CreateAccount(decimal initialAmount)
         {
             try
             {
-                var customer = _customerService.GetCustomerByEmail(email);
-
-                //If customer not exist (New customer) => create new customer
+                var customer = base.CustomerData;
                 if (customer == null)
                 {
-                    var _customerDto = new CustomerWriteDto
-                    {
-                        Email = email,
-                        FullName = fullName
-                    };
-                    customer = _customerService.CreateCustomer(_mapper.Map<Customer>(_customerDto));
-                    if (customer == null) { throw new Exception("Unable to create customer."); }
+                    throw new Exception("Customer not found.");
                 }
 
                 var accountDto = new AccountWriteDto
@@ -76,7 +71,7 @@ namespace AwesomeBankAPI.Controllers
                 }
 
                 //Create transaction for initial amount
-                Transaction transaction = _transactionService.MakeDeposit(account.Id, initialAmount);
+                Transaction transaction = _transactionService.MakeDeposit(account.Id, initialAmount, customer.Id);
                 if (transaction == null)
                 { 
                     throw new Exception("Unable to create transaction");
@@ -92,14 +87,15 @@ namespace AwesomeBankAPI.Controllers
 
         [HttpPost]
         [Route("deposit")]
-        public ActionResult MakeDeposit(string accountId, decimal amount)
+        public ActionResult MakeDeposit(string accountIban, decimal amount)
         {
             try
             {
-                Guid Id = Guid.Parse(accountId);
+                var customer = _customerService.GetCustomerByEmail(base.CustomerIdentityEmail);
+                var account = _accountService.GetAccount(accountIban);
 
                 //Create deposit transaction
-                Transaction transaction = _transactionService.MakeDeposit(Id, amount);
+                Transaction transaction = _transactionService.MakeDeposit(account.Id, amount, customer.Id);
                 if (transaction == null)
                 {
                     throw new Exception("Unable to create transaction");
@@ -116,11 +112,12 @@ namespace AwesomeBankAPI.Controllers
         {
             try
             {
+                var customer = _customerService.GetCustomerByEmail(base.CustomerIdentityEmail);
                 Guid _senderAccountId = Guid.Parse(senderAccountId);
                 Guid _receiverAccountId = Guid.Parse(receiverAccountId);
                 
                 //Create deposit transaction
-                Transaction transaction = _transactionService.MakeTransfer(_senderAccountId, _receiverAccountId, amount);
+                Transaction transaction = _transactionService.MakeTransfer(_senderAccountId, _receiverAccountId, amount, customer.Id);
                 if (transaction == null)
                 {
                     throw new Exception("Unable to create transaction");

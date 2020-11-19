@@ -44,6 +44,10 @@ namespace AwesomeBankAPI.Services
         {
             return _accountRepository.GetById(Id);
         }
+        public Account GetAccount(string Iban)
+        {
+            return _accountRepository.GetByIban(Iban);
+        }
 
         public bool ApplyToBalance(Account account, decimal amount)
         {
