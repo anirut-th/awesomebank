@@ -12,7 +12,7 @@ namespace AwesomeBankAPI.MapProfile
     {
         public AutoMapProfile()
         {
-            CreateMap<Customer, CustomerReadDto>();
+            CreateMap<Customer, CustomerProfileDto>();
             CreateMap<CustomerWriteDto, Customer>();
 
             CreateMap<Account, AccountReadDto>();

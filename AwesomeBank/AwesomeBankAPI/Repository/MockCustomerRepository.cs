@@ -18,6 +18,7 @@ namespace AwesomeBankAPI.Repository
                 Id = Guid.Parse("3682C11D-A560-4B49-AF1F-A631F03A77E7"),
                 Email = "John@email.com",
                 FullName = "John Doe",
+                Password = "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8", //password
                 IsActive = true,
                 CreatedDate = DateTime.Now
             },
@@ -26,6 +27,7 @@ namespace AwesomeBankAPI.Repository
                 Id = Guid.Parse("8A8E9021-4F8A-46AE-9042-4F4B7AE3B261"),
                 Email = "Rami@email.com",
                 FullName = "Rami Horn",
+                Password = "6cf615d5bcaac778352a8f1f3360d23f02f34ec182e259897fd6ce485d7870d4", //password2
                 IsActive = true,
                 CreatedDate = DateTime.Now
             }
