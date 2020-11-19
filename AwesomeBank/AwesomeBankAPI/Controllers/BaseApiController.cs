@@ -4,6 +4,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AwesomeBankAPI.Models;
+using AwesomeBankAPI.Services.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,7 +15,20 @@ namespace AwesomeBankAPI.Controllers
     [ApiController]
     public class BaseApiController : ControllerBase
     {
+        private ICustomerService _customerService;
+        public BaseApiController(ICustomerService customerService)
+        {
+            _customerService = customerService;
+        }
         protected string CustomerIdentityEmail
+        {
+            get
+            {
+                return CustomerData.Email;
+            }
+        }
+
+        protected Customer CustomerData
         {
             get
             {
@@ -22,7 +37,8 @@ namespace AwesomeBankAPI.Controllers
                 var handler = new JwtSecurityTokenHandler();
                 var tokenS = handler.ReadToken(token) as JwtSecurityToken;
                 var email = tokenS.Claims.First(claim => claim.Type == ClaimTypes.Email).Value;
-                return email;
+                var customer = _customerService.GetCustomerByEmail(email);
+                return customer;
             }
         }
     }
