@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static AwesomeBankAPI.Config.GolbalConfig;
 
 namespace AwesomeBankAPI.Models
 {
@@ -9,8 +10,7 @@ namespace AwesomeBankAPI.Models
     {
         public Guid Id { get; set; }
         public Guid AccoundId { get; set; }
-        public string TransactionType { get; set; }
-
+        public TransactionType TransactionType { get; set; }
         public Guid? ReceiverAccoundId { get; set; }
         public decimal Amount { get; set; }
         public Guid ActionByCustomerId { get; set; }
