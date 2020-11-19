@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using AutoMapper;
+using AwesomeBankAPI.DTOs;
+using AwesomeBankAPI.Models;
 using AwesomeBankAPI.Services.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,9 +17,13 @@ namespace AwesomeBankAPI.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAccountService _accountService;
-        public AccountController(IAccountService accountService)
+        private readonly ICustomerService _customerService;
+        private readonly IMapper _mapper;
+        public AccountController(IAccountService accountService, IMapper mapper, ICustomerService customerService)
         {
             _accountService = accountService;
+            _mapper = mapper;
+            _customerService = customerService;
         }
 
         [HttpGet("{id}")]
@@ -31,6 +39,39 @@ namespace AwesomeBankAPI.Controllers
             return NotFound();
         }
 
-        //public ActionResult
+        [HttpPost]
+        public ActionResult CreateAccount(string fullName, string email, decimal initialAmount)
+        {
+            try
+            {
+                var customer = _customerService.GetCustomerByEmail(email);
+                if (customer == null)
+                {
+                    var _customerDto = new CustomerWriteDto
+                    {
+                        Email = email,
+                        FullName = fullName
+                    };
+                    customer = _customerService.CreateCustomer(_mapper.Map<Customer>(_customerDto));
+                    if (customer == null) { throw new Exception("Unable to create customer."); }
+                }
+
+                var accountDto = new AccountWriteDto
+                {
+                    CustomerId = customer.Id,
+                    BalanceAmount = initialAmount
+                };
+                var account = _accountService.CreateAccount(_mapper.Map<Account>(accountDto));
+                if (account == null)
+                {
+                    throw new Exception("Unable to create account");
+                }
+                return Ok(account);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError);
+            }
+        }
     }
 }

@@ -12,5 +12,6 @@ namespace AwesomeBankAPI.Services.Interface
         Customer CreateCustomer(Customer customer);
         Customer GetCustomer(Guid Id);
         bool ValidateRegisterData(string email, string fullName);
+        Customer GetCustomerByEmail(string email);
     }
 }

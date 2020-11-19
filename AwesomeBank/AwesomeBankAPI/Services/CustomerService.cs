@@ -37,6 +37,11 @@ namespace AwesomeBankAPI.Services
             catch (Exception ex) { throw ex; }
         }
 
+        public Customer GetCustomerByEmail(string email)
+        {
+            return _customerRepository.GetByEmail(email);
+        }
+
         public Customer GetCustomer(Guid Id)
         {
             return _customerRepository.GetById(Id);
