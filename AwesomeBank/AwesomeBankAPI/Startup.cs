@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using AwesomeBankAPI.Repository;
 using AwesomeBankAPI.Repository.Interface;
+using AwesomeBankAPI.Services;
+using AwesomeBankAPI.Services.Interface;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -28,6 +30,8 @@ namespace AwesomeBankAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddScoped<IAccountService, AccountService>();
 
             services.AddScoped<IAccountRepository, MockAccountRepository>();
             services.AddScoped<ICustomerRepository, MockCustomerRepository>();
