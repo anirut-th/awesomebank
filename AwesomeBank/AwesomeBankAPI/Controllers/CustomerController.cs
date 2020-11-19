@@ -45,28 +45,33 @@ namespace AwesomeBankAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult<CustomerReadDto> CreateCustomer(CustomerWriteDto customerWriteDto)
+        [Route("register")]
+        public ActionResult CustomerRegister(string fullname, string email, string password)
         {
             try
             {
-                bool isValid = _customerService.ValidateRegisterData(customerWriteDto.Email, customerWriteDto.FullName);
+                bool isValid = _customerService.ValidateRegisterData(fullname, email);
                 if (!isValid) { return BadRequest(); }
 
-                var customerModel = _mapper.Map<Customer>(customerWriteDto);
+                var customerModel = new Customer
+                {
+                    Email = email,
+                    FullName = fullname,
+                    Password = password
+                };
+
                 var result = _customerService.CreateCustomer(customerModel);
                 if (result != null)
                 {
-                    return _mapper.Map<CustomerReadDto>(result);
+                    return Ok("Success");
                 }
                 else
                 {
                     return StatusCode((int)HttpStatusCode.InternalServerError);
                 }
             }
-            catch 
-            { 
-                return StatusCode((int)HttpStatusCode.InternalServerError); 
-            }
+            catch { return StatusCode((int)HttpStatusCode.InternalServerError); }
+
         }
     }
 }
