@@ -20,5 +20,7 @@ namespace AwesomeBankAPI.Config
         }
 
         public const decimal DEPOSIT_FEE = 0.1M;
+        public const string TOKEN_ISSUER = "awesomebank";
+        public const string TOKEN_AUDIENCE = "awesomebank";
     }
 }
