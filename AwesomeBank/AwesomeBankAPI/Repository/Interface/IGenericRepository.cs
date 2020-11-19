@@ -10,7 +10,7 @@ namespace AwesomeBankAPI.Repository.Interface
         public IEnumerable<T> GetAll();
         public T GetSingle(System.Linq.Expressions.Expression<Func<T, bool>> predicate);
         public IEnumerable<T> GetMultiple(System.Linq.Expressions.Expression<Func<T, bool>> predicate);
-        public T GetById();
+        public T GetById(Guid Id);
         public int Add(T model);
         public int Update(T model);
         public int Remove(Guid Id);

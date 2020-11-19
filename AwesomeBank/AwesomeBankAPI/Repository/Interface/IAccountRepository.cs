@@ -8,5 +8,6 @@ namespace AwesomeBankAPI.Repository.Interface
 {
     public interface IAccountRepository : IGenericRepository<Account>
     {
+        Account GetByIban(string Iban);
     }
 }

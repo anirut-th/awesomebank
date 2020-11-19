@@ -8,6 +8,6 @@ namespace AwesomeBankAPI.Repository.Interface
 {
     public interface ICustomerRepository : IGenericRepository<Customer>
     {
-
+        Customer GetByEmail(string email);
     }
 }
