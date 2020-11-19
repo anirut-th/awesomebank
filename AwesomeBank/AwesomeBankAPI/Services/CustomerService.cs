@@ -13,16 +13,20 @@ namespace AwesomeBankAPI.Services
     public class CustomerService : ICustomerService
     {
         private readonly ICustomerRepository _customerRepository;
+        private readonly ICryptographyService _cryptographyService;
 
-        public CustomerService(ICustomerRepository customerRepository)
+        public CustomerService(ICustomerRepository customerRepository, ICryptographyService cryptographyService)
         {
             _customerRepository = customerRepository;
+            _cryptographyService = cryptographyService;
         }
 
         public Customer CreateCustomer(Customer customer)
         {
             try
             {
+                string passwordHash = _cryptographyService.ComputeHash(customer.Password);
+                customer.Password = passwordHash;
                 customer.Id = Guid.NewGuid();
                 customer.IsActive = true;
                 customer.CreatedDate = DateTime.Now;
