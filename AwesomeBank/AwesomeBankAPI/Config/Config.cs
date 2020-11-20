@@ -5,12 +5,22 @@ using System.Threading.Tasks;
 
 namespace AwesomeBankAPI.Config
 {
-    public static class GolbalConfig
+    public static class GlobalConfig
     {
         public enum TransactionType : int
         { 
             DEPOSIT = 100,
             TRANSFER = 200
         };
+
+        public enum Result : int
+        { 
+            SUCCESS = 1,
+            ERROR = 0
+        }
+
+        public const decimal DEPOSIT_FEE = 0.1M;
+        public const string TOKEN_ISSUER = "awesomebank";
+        public const string TOKEN_AUDIENCE = "awesomebank";
     }
 }

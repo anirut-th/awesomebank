@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using AwesomeBankAPI.Repository;
 using AwesomeBankAPI.Repository.Interface;
+using AwesomeBankAPI.Services;
+using AwesomeBankAPI.Services.Interface;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -12,6 +14,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using AutoMapper;
+using System.Security.Cryptography.X509Certificates;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using AwesomeBankAPI.Config;
 
 namespace AwesomeBankAPI
 {
@@ -28,10 +35,33 @@ namespace AwesomeBankAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<ICustomerService, CustomerService>();
+            services.AddScoped<ITransactionService, TransactionService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<ICryptographyService, CryptographyService>();
 
             services.AddScoped<IAccountRepository, MockAccountRepository>();
             services.AddScoped<ICustomerRepository, MockCustomerRepository>();
             services.AddScoped<ITransactionRepository, MockTransactionRepository>();
+
+
+            X509Certificate2 cert = new X509Certificate2(Configuration["Certificate:PublicCertificate"]);
+            X509SecurityKey key = new X509SecurityKey(cert);
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidAudience = GlobalConfig.TOKEN_AUDIENCE,
+                    ValidIssuer = GlobalConfig.TOKEN_ISSUER,
+                    IssuerSigningKey = key
+                };
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,6 +71,7 @@ namespace AwesomeBankAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseAuthentication();
 
             app.UseRouting();
 
