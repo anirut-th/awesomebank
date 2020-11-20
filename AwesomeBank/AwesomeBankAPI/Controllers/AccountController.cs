@@ -22,28 +22,35 @@ namespace AwesomeBankAPI.Controllers
         private readonly ICustomerService _customerService;
         private readonly ITransactionService _transactionService;
         private readonly IMapper _mapper;
+        private readonly IAuthenticationService _authenticationService;
         public AccountController(IAccountService accountService, 
             IMapper mapper, 
             ICustomerService customerService,
-            ITransactionService transactionService) : base(customerService)
+            ITransactionService transactionService,
+            IAuthenticationService authenticationService) : base(customerService)
         {
            
             _accountService = accountService;
             _mapper = mapper;
             _customerService = customerService;
             _transactionService = transactionService;
+            _authenticationService = authenticationService;
         }
 
         [HttpGet("{id}")]
-        public ActionResult GetAccount(string id)
+        public ActionResult GetAccount(string iban)
         {
-            Guid _Id = Guid.Parse(id);
-            var result = _accountService.GetAccount(_Id);
-            if (result != null)
+            var account = _accountService.GetAccount(iban);
+            var IsAuthorize = _authenticationService.CheckAccountAuthorize(base.CustomerData.Id, account.Id);
+            if (!IsAuthorize)
             {
-                return Ok(result);
+                return Unauthorized();
             }
 
+            if (account != null)
+            {
+                return Ok(account);
+            }
             return NotFound();
         }
 
@@ -108,16 +115,14 @@ namespace AwesomeBankAPI.Controllers
 
         [HttpPost]
         [Route("transfer")]
-        public ActionResult MakeTransfer(string senderAccountId, string receiverAccountId, decimal amount)
+        public ActionResult MakeTransfer(string senderIban, string receiverIban, decimal amount)
         {
             try
             {
-                var customer = _customerService.GetCustomerByEmail(base.CustomerIdentityEmail);
-                Guid _senderAccountId = Guid.Parse(senderAccountId);
-                Guid _receiverAccountId = Guid.Parse(receiverAccountId);
+                var customer = base.CustomerData;
                 
                 //Create deposit transaction
-                Transaction transaction = _transactionService.MakeTransfer(_senderAccountId, _receiverAccountId, amount, customer.Id);
+                Transaction transaction = _transactionService.MakeTransfer(senderIban, receiverIban, amount, customer.Id);
                 if (transaction == null)
                 {
                     throw new Exception("Unable to create transaction");
