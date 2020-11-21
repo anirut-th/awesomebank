@@ -11,6 +11,7 @@ using AwesomeBankAPI.Repository;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using AwesomeBankAPI.DTOs;
+using System.Linq;
 
 namespace AwesomeBankAPI.Test
 {
@@ -24,10 +25,14 @@ namespace AwesomeBankAPI.Test
                 {
                     builder.ConfigureServices(services =>
                     {
-                        services.RemoveAll(typeof(AwesomeBankDbContext));
+                        var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<AwesomeBankDbContext>));
+                        if (descriptor != null)
+                        {
+                            services.Remove(descriptor);
+                        }
                         services.AddDbContext<AwesomeBankDbContext>(options =>
                         {
-                            options.UseInMemoryDatabase("TestDb");
+                            options.UseInMemoryDatabase("AwesomeDB");
                         });
                     });
                 });
@@ -36,7 +41,7 @@ namespace AwesomeBankAPI.Test
 
         protected void GetAuthenticate()
         {
-            testClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", GetToken());
+            testClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", GetToken());
         }
 
         private string GetToken()
@@ -46,12 +51,15 @@ namespace AwesomeBankAPI.Test
                 fullname = "test",
                 email = "test@email.com",
                 password = "password123"
-            }));
-            var response = testClient.PostAsync("https://localhost:44367/api/customer/register", postContent);
+            }), Encoding.UTF8, "application/json");
+            testClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            var response = testClient.PostAsync("http://localhost/api/customer/register", postContent);
             if (response.Result.IsSuccessStatusCode)
             {
                 testClient.DefaultRequestHeaders.Add($"Authorization", $"Basic {Base64Encode("test@email.com:password123")}");
-                var token = testClient.PostAsync("https://localhost:44367/api/auth/token", null).Result.Content.ReadAsStringAsync().Result;
+                var token = testClient.PostAsync("http://localhost/api/auth/token", null).Result.Content.ReadAsStringAsync().Result;
+                token = token.Replace("\"", String.Empty);
                 return token;
             }
             else
