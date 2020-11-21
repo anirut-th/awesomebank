@@ -19,6 +19,7 @@ using System.Security.Cryptography.X509Certificates;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using AwesomeBankAPI.Config;
+using Microsoft.EntityFrameworkCore;
 
 namespace AwesomeBankAPI
 {
@@ -43,10 +44,12 @@ namespace AwesomeBankAPI
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<ICryptographyService, CryptographyService>();
 
-            services.AddScoped<IAccountRepository, MockAccountRepository>();
-            services.AddScoped<ICustomerRepository, MockCustomerRepository>();
-            services.AddScoped<ITransactionRepository, MockTransactionRepository>();
-
+            //services.AddScoped<IAccountRepository, MockAccountRepository>();
+            //services.AddScoped<ICustomerRepository, MockCustomerRepository>();
+            //services.AddScoped<ITransactionRepository, MockTransactionRepository>();
+            services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
+            services.AddScoped<ITransactionRepository, TransactionRepository>();
 
             X509Certificate2 cert = new X509Certificate2(Configuration["Certificate:PublicCertificate"]);
             X509SecurityKey key = new X509SecurityKey(cert);
@@ -62,6 +65,8 @@ namespace AwesomeBankAPI
                     IssuerSigningKey = key
                 };
             });
+
+            services.AddDbContext<AwesomeBankDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("AwesomeDatabase")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
