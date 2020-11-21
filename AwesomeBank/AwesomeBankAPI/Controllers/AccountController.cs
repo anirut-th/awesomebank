@@ -41,17 +41,16 @@ namespace AwesomeBankAPI.Controllers
         public ActionResult GetAccount(string iban)
         {
             var account = _accountService.GetAccount(iban);
+            if (account == null)
+            {
+                return NotFound();
+            }
             var IsAuthorize = _authenticationService.CheckAccountAuthorize(base.CustomerData.Id, account.Id);
             if (!IsAuthorize)
             {
                 return Unauthorized();
             }
-
-            if (account != null)
-            {
-                return Ok(account);
-            }
-            return NotFound();
+            return Ok(account);
         }
 
         [HttpPost]
