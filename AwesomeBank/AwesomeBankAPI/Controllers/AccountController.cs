@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using AutoMapper;
 using AwesomeBankAPI.DTOs;
 using AwesomeBankAPI.Models;
 using AwesomeBankAPI.Services.Interface;
@@ -21,17 +20,14 @@ namespace AwesomeBankAPI.Controllers
         private readonly IAccountService _accountService;
         private readonly ICustomerService _customerService;
         private readonly ITransactionService _transactionService;
-        private readonly IMapper _mapper;
         private readonly IAuthenticationService _authenticationService;
         public AccountController(IAccountService accountService, 
-            IMapper mapper, 
             ICustomerService customerService,
             ITransactionService transactionService,
             IAuthenticationService authenticationService) : base(customerService)
         {
            
             _accountService = accountService;
-            _mapper = mapper;
             _customerService = customerService;
             _transactionService = transactionService;
             _authenticationService = authenticationService;
@@ -70,7 +66,7 @@ namespace AwesomeBankAPI.Controllers
                     CustomerId = customer.Id,
                     BalanceAmount = 0 //initial with 0, the initialAmount will apply after create a transaction. 
                 };
-                var account = _accountService.CreateAccount(_mapper.Map<Account>(accountDto));
+                var account = _accountService.CreateAccount((Account)accountDto);
                 if (account == null)
                 {
                     throw new Exception("Unable to create account");

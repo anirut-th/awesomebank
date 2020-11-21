@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using AutoMapper;
 using AwesomeBankAPI.DTOs;
 using AwesomeBankAPI.Models;
 using AwesomeBankAPI.Services.Interface;
@@ -19,12 +18,10 @@ namespace AwesomeBankAPI.Controllers
     public class CustomerController : BaseApiController
     {
         private readonly ICustomerService _customerService;
-        private readonly IMapper _mapper;
 
-        public CustomerController(ICustomerService customerService, IMapper mapper) : base(customerService)
+        public CustomerController(ICustomerService customerService) : base(customerService)
         {
             _customerService = customerService;
-            _mapper = mapper;
         }
 
         [HttpGet]
@@ -37,7 +34,7 @@ namespace AwesomeBankAPI.Controllers
                 var result = base.CustomerData;
                 if (result != null)
                 {
-                    return Ok(_mapper.Map<CustomerProfileDto>(result));
+                    return Ok((CustomerProfileDto)(result));
                 }
                 return NotFound();
             }

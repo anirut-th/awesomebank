@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AwesomeBankAPI.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,11 +8,19 @@ namespace AwesomeBankAPI.DTOs
 {
     public class AccountReadDto
     {
-        public Guid Id { get; set; }
-        public Guid CustomerId { get; set; }
         public string Iban { get; set; }
         public string Name { get; set; }
         public decimal BalanceAmount { get; set; }
+
+        public static explicit operator AccountReadDto(Account account)
+        {
+            return new AccountReadDto
+            {
+                Iban = account.Iban,
+                Name = account.Name,
+                BalanceAmount = account.BalanceAmount
+            };
+        }
     }
 
     public class AccountWriteDto
@@ -19,6 +28,16 @@ namespace AwesomeBankAPI.DTOs
         public Guid CustomerId { get; set; }
         public string Name { get; set; }
         public decimal BalanceAmount { get; set; }
+
+        public static explicit operator Account(AccountWriteDto account)
+        {
+            return new Account
+            {
+                CustomerId = account.CustomerId,
+                Name = account.Name,
+                BalanceAmount = account.BalanceAmount
+            };
+        }
     }
 
     public class MakeTransferData
