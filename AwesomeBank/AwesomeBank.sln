@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29519.181
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AwesomeBankAPI", "AwesomeBankAPI\AwesomeBankAPI.csproj", "{C47C2950-90B1-4FA8-A9C0-2552D858E2F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AwesomeBankAPI", "AwesomeBankAPI\AwesomeBankAPI.csproj", "{C47C2950-90B1-4FA8-A9C0-2552D858E2F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AwesomeBankAPI.Test", "AwesomeBankAPI.Test\AwesomeBankAPI.Test.csproj", "{2A8DA12F-40E3-4CB8-B7EF-80DD7A8842A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{C47C2950-90B1-4FA8-A9C0-2552D858E2F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C47C2950-90B1-4FA8-A9C0-2552D858E2F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C47C2950-90B1-4FA8-A9C0-2552D858E2F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A8DA12F-40E3-4CB8-B7EF-80DD7A8842A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A8DA12F-40E3-4CB8-B7EF-80DD7A8842A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A8DA12F-40E3-4CB8-B7EF-80DD7A8842A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A8DA12F-40E3-4CB8-B7EF-80DD7A8842A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
