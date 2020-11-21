@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using AwesomeBankAPI.Repository;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using AwesomeBankAPI.DTOs;
 
 namespace AwesomeBankAPI.Test
 {
@@ -33,14 +34,36 @@ namespace AwesomeBankAPI.Test
             testClient = appFactory.CreateClient();
         }
 
-        protected async Task GetAuthenticateAsync()
+        protected void GetAuthenticate()
         {
-            testClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", await GetTokenAsync());
+            testClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", GetToken());
         }
 
-        private async Task<string> GetTokenAsync()
+        private string GetToken()
         {
-            throw new NotImplementedException();
+            var postContent = new StringContent(JsonConvert.SerializeObject(new CustomerRegisterData
+            {
+                fullname = "test",
+                email = "test@email.com",
+                password = "password123"
+            }));
+            var response = testClient.PostAsync("https://localhost:44367/api/customer/register", postContent);
+            if (response.Result.IsSuccessStatusCode)
+            {
+                testClient.DefaultRequestHeaders.Add($"Authorization", $"Basic {Base64Encode("test@email.com:password123")}");
+                var token = testClient.PostAsync("https://localhost:44367/api/auth/token", null).Result.Content.ReadAsStringAsync().Result;
+                return token;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private string Base64Encode(string textToEncode)
+        {
+            byte[] textAsBytes = Encoding.UTF8.GetBytes(textToEncode);
+            return Convert.ToBase64String(textAsBytes);
         }
     }
 }
