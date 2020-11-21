@@ -1,6 +1,7 @@
 ﻿using AwesomeBankAPI.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -23,8 +24,11 @@ namespace AwesomeBankAPI.DTOs
 
     public class CustomerRegisterData
     { 
+        [Required]
         public string fullname { get; set; }
+        [Required]
         public string email { get; set; }
+        [Required]
         public string password { get; set; }
 
         public static explicit operator Customer(CustomerRegisterData customerRegister)

@@ -2,6 +2,7 @@
 using AwesomeBankAPI.Models;
 using AwesomeBankAPI.Repository.Interface;
 using AwesomeBankAPI.Services.Interface;
+using SinKien.IBAN4Net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,7 @@ namespace AwesomeBankAPI.Services
             {
                 account.Id = Guid.NewGuid();
                 account.CreatedDate = DateTime.Now;
+                account.Iban = GenerateIBAN();
                 account.IsActive = true;
 
                 var result = _accountRepository.Add(account);
@@ -37,6 +39,15 @@ namespace AwesomeBankAPI.Services
 
         public string GenerateIBAN()
         {
+            Random rand = new Random();
+            string randAccountNo = rand.Next(0, 99999).ToString("00000"); 
+            string randAccountNo2 = rand.Next(0, 99999).ToString("00000");
+            Iban iban = new IbanBuilder()
+                .CountryCode(CountryCode.GetCountryCode("CZ"))
+                .BankCode("ABCD")
+                .AccountNumberPrefix("000019")
+                .AccountNumber(randAccountNo + randAccountNo2)
+                .Build();
             throw new NotImplementedException();
         }
 

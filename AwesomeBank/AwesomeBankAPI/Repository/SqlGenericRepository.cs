@@ -52,21 +52,16 @@ namespace AwesomeBankAPI.Repository
 
         public int Add(T model)
         {
-            using (var dbContextTransaction = _context.Database.BeginTransaction())
+            try
             {
-                try
-                {
-                    _context.Set<T>().Add(model);
-                    var response = _context.SaveChanges();
-                    dbContextTransaction.Commit();
+                _context.Set<T>().Add(model);
+                var response = _context.SaveChanges();
 
-                    return response;
-                }
-                catch (Exception ex)
-                {
-                    dbContextTransaction.Rollback();
-                    throw ex;
-                }
+                return response;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
 

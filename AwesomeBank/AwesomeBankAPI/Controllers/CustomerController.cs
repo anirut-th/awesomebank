@@ -38,7 +38,7 @@ namespace AwesomeBankAPI.Controllers
                 }
                 return NotFound();
             }
-            catch 
+            catch (Exception ex)
             { 
                 return StatusCode((int)HttpStatusCode.InternalServerError); 
             }
@@ -50,7 +50,7 @@ namespace AwesomeBankAPI.Controllers
         {
             try
             {
-                bool isValid = _customerService.ValidateRegisterData(data.fullname, data.email);
+                bool isValid = _customerService.ValidateRegisterData(data.email, data.fullname);
                 if (!isValid) { return BadRequest(); }
 
                 var customerModel = new Customer
