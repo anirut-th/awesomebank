@@ -49,18 +49,18 @@ namespace AwesomeBankAPI.Controllers
 
         [HttpPost]
         [Route("register")]
-        public ActionResult CustomerRegister(string fullname, string email, string password)
+        public ActionResult CustomerRegister([FromBody]CustomerRegisterData data)
         {
             try
             {
-                bool isValid = _customerService.ValidateRegisterData(fullname, email);
+                bool isValid = _customerService.ValidateRegisterData(data.fullname, data.email);
                 if (!isValid) { return BadRequest(); }
 
                 var customerModel = new Customer
                 {
-                    Email = email,
-                    FullName = fullname,
-                    Password = password
+                    Email = data.email,
+                    FullName = data.fullname,
+                    Password = data.password
                 };
 
                 var result = _customerService.CreateCustomer(customerModel);
