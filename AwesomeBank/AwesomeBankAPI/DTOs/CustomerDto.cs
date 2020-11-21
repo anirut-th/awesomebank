@@ -10,4 +10,11 @@ namespace AwesomeBankAPI.DTOs
         public string FullName { get; set; }
         public string Email { get; set; }
     }
+
+    public class CustomerRegisterData
+    { 
+        public string fullname { get; set; }
+        public string email { get; set; }
+        public string password { get; set; }
+    }
 }

@@ -54,7 +54,7 @@ namespace AwesomeBankAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateAccount(decimal initialAmount)
+        public ActionResult CreateAccount([FromBody]decimal initialAmount)
         {
             try
             {
@@ -93,15 +93,15 @@ namespace AwesomeBankAPI.Controllers
 
         [HttpPost]
         [Route("deposit")]
-        public ActionResult MakeDeposit(string accountIban, decimal amount)
+        public ActionResult MakeDeposit([FromBody]MakeDepositData data)
         {
             try
             {
                 var customer = _customerService.GetCustomerByEmail(base.CustomerIdentityEmail);
-                var account = _accountService.GetAccount(accountIban);
+                var account = _accountService.GetAccount(data.accountIban);
 
                 //Create deposit transaction
-                Transaction transaction = _transactionService.MakeDeposit(account.Id, amount, customer.Id);
+                Transaction transaction = _transactionService.MakeDeposit(account.Id, data.amount, customer.Id);
                 if (transaction == null)
                 {
                     throw new Exception("Unable to create transaction");
@@ -114,14 +114,14 @@ namespace AwesomeBankAPI.Controllers
 
         [HttpPost]
         [Route("transfer")]
-        public ActionResult MakeTransfer(string senderIban, string receiverIban, decimal amount)
+        public ActionResult MakeTransfer([FromBody]MakeTransferData data)
         {
             try
             {
                 var customer = base.CustomerData;
                 
                 //Create deposit transaction
-                Transaction transaction = _transactionService.MakeTransfer(senderIban, receiverIban, amount, customer.Id);
+                Transaction transaction = _transactionService.MakeTransfer(data.senderIban, data.receiverIban, data.amount, customer.Id);
                 if (transaction == null)
                 {
                     throw new Exception("Unable to create transaction");
