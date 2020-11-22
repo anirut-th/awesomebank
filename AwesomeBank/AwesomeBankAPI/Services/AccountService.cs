@@ -44,11 +44,11 @@ namespace AwesomeBankAPI.Services
             string randAccountNo2 = rand.Next(0, 99999).ToString("00000");
             Iban iban = new IbanBuilder()
                 .CountryCode(CountryCode.GetCountryCode("CZ"))
-                .BankCode("ABCD")
+                .BankCode("0010")
                 .AccountNumberPrefix("000019")
                 .AccountNumber(randAccountNo + randAccountNo2)
                 .Build();
-            throw new NotImplementedException();
+            return iban.ToString();
         }
 
         public Account GetAccount(Guid Id)
@@ -83,7 +83,13 @@ namespace AwesomeBankAPI.Services
 
         public bool ValidateIBAN(string iban)
         {
-            throw new NotImplementedException();
+            try
+            {
+                IbanNet.IIbanValidator validator = new IbanNet.IbanValidator();
+                IbanNet.ValidationResult validationResult = validator.Validate(iban);
+                return validationResult.IsValid;
+            }
+            catch (Exception ex) { throw ex; }
         }
     }
 }
