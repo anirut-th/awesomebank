@@ -51,7 +51,7 @@ namespace AwesomeBankAPI.Controllers
             try
             {
                 bool isValid = _customerService.ValidateRegisterData(data.email, data.fullname);
-                if (!isValid) { return BadRequest(); }
+                if (!isValid) { return BadRequest("test test"); }
 
                 var customerModel = new Customer
                 {
