@@ -56,6 +56,10 @@ namespace AwesomeBankAPI.Services
                 transaction.TransactionFee = applyFee ? CalDepositFee(transaction.Amount) : 0;
                 transaction.AmountAfterFee = transaction.Amount - transaction.TransactionFee;
 
+                transaction.Amount = Math.Round(transaction.Amount, 2);
+                transaction.TransactionFee = Math.Round(transaction.TransactionFee, 2);
+                transaction.AmountAfterFee = Math.Round(transaction.AmountAfterFee, 2);
+
                 if (transaction.AmountAfterFee < 0)
                 {
                     throw new Exception("Amount included fee can't less than zero.");
@@ -137,6 +141,10 @@ namespace AwesomeBankAPI.Services
             //money that deposit to receiver account must apply deposit fee same as deposit process.
             transaction.TransactionFee = applyFee ? CalDepositFee(transaction.Amount) : 0;
             transaction.AmountAfterFee = transaction.Amount - transaction.TransactionFee;
+
+            transaction.Amount = Math.Round(transaction.Amount, 2);
+            transaction.TransactionFee = Math.Round(transaction.TransactionFee, 2);
+            transaction.AmountAfterFee = Math.Round(transaction.AmountAfterFee, 2);
 
             var resultTransacetion = _transactionRepository.Add(transaction);
             if (resultTransacetion == (int)GlobalConfig.Result.ERROR)
