@@ -52,8 +52,8 @@ namespace AwesomeBankAPI.Test
             //Arrange
             var postContent = new StringContent(JsonConvert.SerializeObject(new CustomerRegisterData
             {
-                fullname = "test",
-                email = "test@email.com",
+                fullname = "test2",
+                email = "test2@email.com",
                 password = "password123"
             }), Encoding.UTF8, "application/json");
             testClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));

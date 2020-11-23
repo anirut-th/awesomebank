@@ -14,6 +14,22 @@ namespace AwesomeBankAPI.Test
 {
     public class AccountControllerTest : IntegrationTest
     {
+        public AccountControllerTest()
+        {
+            //Generate Test Account
+            GetAuthenticate();
+            var postContent = new StringContent(JsonConvert.SerializeObject(0), Encoding.UTF8, "application/json");
+            testClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            var response = testClient.PostAsync("https://localhost/api/account/", postContent).Result;
+            testAccount1 = JsonConvert.DeserializeObject<Account>(response.Content.ReadAsStringAsync().Result);
+
+            postContent = new StringContent(JsonConvert.SerializeObject(1000000000), Encoding.UTF8, "application/json");
+            testClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            response = testClient.PostAsync("https://localhost/api/account/", postContent).Result;
+            testAccount2 = JsonConvert.DeserializeObject<Account>(response.Content.ReadAsStringAsync().Result);
+            GetAnonymous();
+        }
+
         [Theory]
         [InlineData("https://localhost/api/account/")]
         [InlineData("https://localhost/api/account/EEF44E60-547C-4A84-9976-92A21704FD5C")]
@@ -61,6 +77,7 @@ namespace AwesomeBankAPI.Test
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             var account = JsonConvert.DeserializeObject<Account>(response.Content.ReadAsStringAsync().Result);
             account.Id.Should().Be(testAccount1.Id);
+            GetAnonymous();
         }
 
         [Fact]
@@ -84,7 +101,7 @@ namespace AwesomeBankAPI.Test
         {
             //Arrange
             GetAuthenticate();
-            var postContent = new StringContent(JsonConvert.SerializeObject("2000"), Encoding.UTF8, "application/json");
+            var postContent = new StringContent(JsonConvert.SerializeObject(2000), Encoding.UTF8, "application/json");
             testClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             //Act
