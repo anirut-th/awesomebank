@@ -27,7 +27,7 @@ namespace AwesomeBankAPI.Services
             return GlobalConfig.DEPOSIT_FEE * depositAmount / 100M;
         }
 
-        public Transaction MakeDeposit(Guid accountId, decimal amount, Guid actionBy)
+        public Transaction MakeDeposit(Guid accountId, decimal amount, Guid actionBy, bool applyFee)
         {
             try
             {
@@ -43,11 +43,6 @@ namespace AwesomeBankAPI.Services
                     throw new Exception("Unauthorize to make transaction");
                 }
 
-                if (amount <= 0)
-                {
-                    throw new Exception("Amount can't less than zero.");
-                }
-
                 Transaction transaction = new Transaction
                 {
                     Id = Guid.NewGuid(),
@@ -58,8 +53,13 @@ namespace AwesomeBankAPI.Services
                     IsActive = true,
                     CreatedDate = DateTime.Now,
                 };
-                transaction.TransactionFee = CalDepositFee(transaction.Amount);
+                transaction.TransactionFee = applyFee ? CalDepositFee(transaction.Amount) : 0;
                 transaction.AmountAfterFee = transaction.Amount - transaction.TransactionFee;
+
+                if (transaction.AmountAfterFee < 0)
+                {
+                    throw new Exception("Amount included fee can't less than zero.");
+                }
 
                 var result = _transactionRepository.Add(transaction);
                 if (result == (int)GlobalConfig.Result.ERROR)
@@ -78,18 +78,18 @@ namespace AwesomeBankAPI.Services
             catch (Exception ex) { throw ex; }
             
         }
-        public Transaction MakeDeposit(string accountIban, decimal amount, Guid actionBy)
+        public Transaction MakeDeposit(string accountIban, decimal amount, Guid actionBy, bool applyFee)
         {
             var account = _accountService.GetAccount(accountIban);
             if (account == null)
             {
                 throw new Exception("Account not found.");
             }
-            var transaction = MakeDeposit(account.Id, amount, actionBy);
+            var transaction = MakeDeposit(account.Id, amount, actionBy, applyFee);
             return transaction;
         }
 
-        public Transaction MakeTransfer(Guid senderAccountId, Guid receiverAccountId, decimal amount, Guid ActionBy)
+        public Transaction MakeTransfer(Guid senderAccountId, Guid receiverAccountId, decimal amount, Guid ActionBy, bool applyFee)
         {
             var senderAccount = _accountService.GetAccount(senderAccountId);
             if (senderAccount == null)
@@ -135,7 +135,7 @@ namespace AwesomeBankAPI.Services
             };
 
             //money that deposit to receiver account must apply deposit fee same as deposit process.
-            transaction.TransactionFee = CalDepositFee(transaction.Amount);
+            transaction.TransactionFee = applyFee ? CalDepositFee(transaction.Amount) : 0;
             transaction.AmountAfterFee = transaction.Amount - transaction.TransactionFee;
 
             var resultTransacetion = _transactionRepository.Add(transaction);
@@ -154,7 +154,7 @@ namespace AwesomeBankAPI.Services
             return transaction;
         }
 
-        public Transaction MakeTransfer(string senderIban, string receiverIban, decimal amount, Guid ActionBy)
+        public Transaction MakeTransfer(string senderIban, string receiverIban, decimal amount, Guid ActionBy, bool applyFee)
         {
             var senderAccount = _accountService.GetAccount(senderIban);
             var receiverAccount = _accountService.GetAccount(receiverIban);
@@ -162,7 +162,7 @@ namespace AwesomeBankAPI.Services
             {
                 throw new Exception("Account not found.");
             }
-            var transaction = MakeTransfer(senderAccount.Id, receiverAccount.Id, amount, ActionBy);
+            var transaction = MakeTransfer(senderAccount.Id, receiverAccount.Id, amount, ActionBy, applyFee);
             return transaction;
         }
     }

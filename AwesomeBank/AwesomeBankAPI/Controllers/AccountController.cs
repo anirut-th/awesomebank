@@ -73,7 +73,7 @@ namespace AwesomeBankAPI.Controllers
                 }
 
                 //Create transaction for initial amount
-                Transaction transaction = _transactionService.MakeDeposit(account.Id, initialAmount, customer.Id);
+                Transaction transaction = _transactionService.MakeDeposit(account.Id, initialAmount, customer.Id, false);
                 if (transaction == null)
                 { 
                     throw new Exception("Unable to create transaction");
@@ -97,7 +97,7 @@ namespace AwesomeBankAPI.Controllers
                 var account = _accountService.GetAccount(data.accountIban);
 
                 //Create deposit transaction
-                Transaction transaction = _transactionService.MakeDeposit(account.Id, data.amount, customer.Id);
+                Transaction transaction = _transactionService.MakeDeposit(account.Id, data.amount, customer.Id, true);
                 if (transaction == null)
                 {
                     throw new Exception("Unable to create transaction");
@@ -117,7 +117,7 @@ namespace AwesomeBankAPI.Controllers
                 var customer = base.CustomerData;
                 
                 //Create deposit transaction
-                Transaction transaction = _transactionService.MakeTransfer(data.senderIban, data.receiverIban, data.amount, customer.Id);
+                Transaction transaction = _transactionService.MakeTransfer(data.senderIban, data.receiverIban, data.amount, customer.Id, true);
                 if (transaction == null)
                 {
                     throw new Exception("Unable to create transaction");
