@@ -43,9 +43,9 @@ namespace AwesomeBankAPI.Services
             string randAccountNo = rand.Next(0, 99999).ToString("00000"); 
             string randAccountNo2 = rand.Next(0, 99999).ToString("00000");
             Iban iban = new IbanBuilder()
-                .CountryCode(CountryCode.GetCountryCode("CZ"))
-                .BankCode("0010")
-                .AccountNumberPrefix("000019")
+                .CountryCode(CountryCode.GetCountryCode(GlobalConfig.MAIN_COUNTRY_CODE))
+                .BankCode(GlobalConfig.BANK_CODE)
+                .AccountNumberPrefix(GlobalConfig.ACCOUNT_PREFIX)
                 .AccountNumber(randAccountNo + randAccountNo2)
                 .Build();
             return iban.ToString();
