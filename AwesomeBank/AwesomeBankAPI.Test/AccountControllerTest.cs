@@ -153,7 +153,7 @@ namespace AwesomeBankAPI.Test
             
             //Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var getaccount = testClient.GetAsync("https://localhost/api/account/" + testAccount1.Id).Result;
+            var getaccount = testClient.GetAsync("https://localhost/api/account/" + testAccount1.Iban).Result;
             var account = JsonConvert.DeserializeObject<Account>(getaccount.Content.ReadAsStringAsync().Result);
             account.BalanceAmount.Should().Be(expected);
         }
@@ -186,8 +186,8 @@ namespace AwesomeBankAPI.Test
 
             //Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var getSenderAccount = testClient.GetAsync("https://localhost/api/account/" + testAccount2.Id).Result;
-            var getReceiverAccount = testClient.GetAsync("https://localhost/api/account/" + testAccount1.Id).Result;
+            var getSenderAccount = testClient.GetAsync("https://localhost/api/account/" + testAccount2.Iban).Result;
+            var getReceiverAccount = testClient.GetAsync("https://localhost/api/account/" + testAccount1.Iban).Result;
             var senderAccount = JsonConvert.DeserializeObject<Account>(getSenderAccount.Content.ReadAsStringAsync().Result);
             var receiverAccount = JsonConvert.DeserializeObject<Account>(getReceiverAccount.Content.ReadAsStringAsync().Result);
 
