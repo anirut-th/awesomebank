@@ -18,7 +18,7 @@ namespace AwesomeBankAPI.DTOs
             {
                 Iban = account.Iban,
                 Name = account.Name,
-                BalanceAmount = Math.Round(account.BalanceAmount, 2)
+                BalanceAmount = account.BalanceAmount
             };
         }
     }
@@ -35,7 +35,7 @@ namespace AwesomeBankAPI.DTOs
             {
                 CustomerId = account.CustomerId,
                 Name = account.Name,
-                BalanceAmount = Math.Round(account.BalanceAmount, 2)
+                BalanceAmount = account.BalanceAmount
             };
         }
     }
