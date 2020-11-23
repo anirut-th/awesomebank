@@ -24,7 +24,7 @@ namespace AwesomeBankAPI.Config
         public const string TOKEN_AUDIENCE = "awesomebank";
 
         public const string MAIN_COUNTRY_CODE = "NL";
-        public const string BANK_CODE = "0010";
+        public const string BANK_CODE = "AWSB";
         public const string ACCOUNT_PREFIX = "000019";
     }
 }

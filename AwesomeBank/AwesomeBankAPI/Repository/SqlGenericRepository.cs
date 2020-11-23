@@ -67,42 +67,33 @@ namespace AwesomeBankAPI.Repository
 
         public int Update(T model)
         {
-            using (var dbContextTransaction = _context.Database.BeginTransaction())
-            {
-                try
-                {
-                    _context.Entry(model).State = EntityState.Modified;
-                    var response = _context.SaveChanges();
-                    dbContextTransaction.Commit();
 
-                    return response;
-                }
-                catch (Exception ex)
-                {
-                    dbContextTransaction.Rollback();
-                    throw ex;
-                }
+            try
+            {
+                _context.Update<T>(model);
+                var response = _context.SaveChanges();
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
 
         public int Remove(Guid Id)
         {
-            using (var dbContextTransaction = _context.Database.BeginTransaction())
+            try
             {
-                try
-                {
-                    var model = _context.Accounts.FirstOrDefault(x => x.Id == Id);
-                    _context.Entry(model).State = EntityState.Deleted;
-                    var response = _context.SaveChanges();
-                    dbContextTransaction.Commit();
+                var model = _context.Set<T>().Find(Id);
+                _context.Set<T>().Remove(model);
+                var response = _context.SaveChanges();
 
-                    return response;
-                }
-                catch (Exception ex)
-                {
-                    dbContextTransaction.Rollback();
-                    throw ex;
-                }
+                return response;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
     }
