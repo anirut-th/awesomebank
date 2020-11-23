@@ -33,7 +33,7 @@ namespace AwesomeBankAPI.Controllers
             _authenticationService = authenticationService;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{iban}")]
         public ActionResult GetAccount(string iban)
         {
             var account = _accountService.GetAccount(iban);
