@@ -54,4 +54,4 @@ A simple banking systems implemented using ASP.Net Core 3.1
 	```
 	dotnet run
 	```	
-	You can go to https://localhost:5001/swagger to check it out.
+	You can go to https://localhost:5001/swagger to check it out. To run the test please checkout ```develop-test``` branch.
