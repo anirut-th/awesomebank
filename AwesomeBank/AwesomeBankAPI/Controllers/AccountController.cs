@@ -50,7 +50,7 @@ namespace AwesomeBankAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateAccount(decimal initialAmount)
+        public ActionResult CreateAccount([FromBody]decimal initialAmount)
         {
             try
             {
