@@ -19,6 +19,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using AwesomeBankAPI.Config;
 using Microsoft.EntityFrameworkCore;
+using Swashbuckle.Swagger;
 
 namespace AwesomeBankAPI
 {
@@ -65,6 +66,8 @@ namespace AwesomeBankAPI
             });
 
             services.AddDbContext<AwesomeBankDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("AwesomeDatabase")));
+
+            services.AddSwaggerGen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -74,6 +77,13 @@ namespace AwesomeBankAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "AwesomeBank API V1");
+            });
+
             app.UseAuthentication();
 
             app.UseRouting();
