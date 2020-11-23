@@ -12,12 +12,15 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using AwesomeBankAPI.DTOs;
 using System.Linq;
+using AwesomeBankAPI.Models;
 
 namespace AwesomeBankAPI.Test
 {
     public class IntegrationTest
     {
         protected readonly HttpClient testClient;
+        protected Account testAccount1;
+        protected Account testAccount2;
         public IntegrationTest()
         {
             var appFactory = new WebApplicationFactory<Startup>()
@@ -37,15 +40,8 @@ namespace AwesomeBankAPI.Test
                     });
                 });
             testClient = appFactory.CreateClient();
-        }
 
-        protected void GetAuthenticate()
-        {
-            testClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", GetToken());
-        }
-
-        private string GetToken()
-        {
+            //Generate Test Customer
             var postContent = new StringContent(JsonConvert.SerializeObject(new CustomerRegisterData
             {
                 fullname = "test",
@@ -53,19 +49,35 @@ namespace AwesomeBankAPI.Test
                 password = "password123"
             }), Encoding.UTF8, "application/json");
             testClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            var response = testClient.PostAsync("http://localhost/api/customer/register", postContent).Result;
 
-            var response = testClient.PostAsync("http://localhost/api/customer/register", postContent);
-            if (response.Result.IsSuccessStatusCode)
-            {
-                testClient.DefaultRequestHeaders.Add($"Authorization", $"Basic {Base64Encode("test@email.com:password123")}");
-                var token = testClient.PostAsync("http://localhost/api/auth/token", null).Result.Content.ReadAsStringAsync().Result;
-                token = token.Replace("\"", String.Empty);
-                return token;
-            }
-            else
-            {
-                return null;
-            }
+            //Generate Test Account
+            postContent = new StringContent(JsonConvert.SerializeObject("0"), Encoding.UTF8, "application/json");
+            testClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            response = testClient.PostAsync("https://localhost/api/account/", postContent).Result;
+            testAccount1 = JsonConvert.DeserializeObject<Account>(response.Content.ReadAsStringAsync().Result);
+
+            postContent = new StringContent(JsonConvert.SerializeObject(1000000000), Encoding.UTF8, "application/json");
+            testClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            response = testClient.PostAsync("https://localhost/api/account/", postContent).Result;
+            testAccount2 = JsonConvert.DeserializeObject<Account>(response.Content.ReadAsStringAsync().Result);
+        }
+
+        protected void GetAuthenticate()
+        {
+            testClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", GetToken());
+        }
+        protected void GetAnonymous()
+        {
+            testClient.DefaultRequestHeaders.Authorization = null;
+        }
+
+        private string GetToken()
+        {
+            testClient.DefaultRequestHeaders.Add($"Authorization", $"Basic {Base64Encode("test@email.com:password123")}");
+            var token = testClient.PostAsync("http://localhost/api/auth/token", null).Result.Content.ReadAsStringAsync().Result;
+            token = token.Replace("\"", String.Empty);
+            return token;
         }
 
         private string Base64Encode(string textToEncode)
