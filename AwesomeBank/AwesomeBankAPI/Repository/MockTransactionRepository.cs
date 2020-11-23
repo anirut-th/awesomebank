@@ -21,9 +21,8 @@ namespace AwesomeBankAPI.Repository
                 Amount = 200,
                 Description = "Deposit to Account:09382349123, Amount 200 Baht.",
                 ReceiverAccoundId = null,
-                TransactionType = GolbalConfig.TransactionType.DEPOSIT,
+                TransactionType = (int)GlobalConfig.TransactionType.DEPOSIT,
                 IsActive = true,
-                CreatedBy = "System",
                 CreatedDate = DateTime.Now
             },
 
@@ -35,9 +34,8 @@ namespace AwesomeBankAPI.Repository
                 Amount = 500,
                 Description = "Transfer from Account:09382349123 to Account:09382349123, Amount 500 Baht.",
                 ReceiverAccoundId = Guid.Parse("DD3DDE66-38CC-487A-8A6C-82E5928A7D69"),
-                TransactionType = GolbalConfig.TransactionType.TRANSFER,
+                TransactionType = (int)GlobalConfig.TransactionType.TRANSFER,
                 IsActive = true,
-                CreatedBy = "System",
                 CreatedDate = DateTime.Now
             },
         };
