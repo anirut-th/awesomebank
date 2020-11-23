@@ -31,37 +31,18 @@ namespace AwesomeBankAPI.Test
         }
 
         [Theory]
-        [InlineData("https://localhost/api/account/")]
-        [InlineData("https://localhost/api/account/EEF44E60-547C-4A84-9976-92A21704FD5C")]
         [InlineData("https://localhost/api/account/transfer")]
         [InlineData("https://localhost/api/account/deposit")]
-        public void Endpoint_WithoutAuth_ReturnUnauthorized(string url)
+        public void POSTEndpoint_WithoutAuth_ReturnUnauthorized(string url)
         {
             //Arrange
             GetAnonymous();
 
             //Act
-            var response = testClient.GetAsync(url).Result;
+            var response = testClient.PostAsync(url, null).Result;
 
             //Assert
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
-        }
-
-        [Theory]
-        [InlineData("https://localhost/api/account/")]
-        [InlineData("https://localhost/api/account/EEF44E60-547C-4A84-9976-92A21704FD5C")]
-        [InlineData("https://localhost/api/account/transfer")]
-        [InlineData("https://localhost/api/account/deposit")]
-        public void Endpoint_WithAuth_NotReturnUnauthorized(string url)
-        {
-            //Arrange
-            GetAnonymous();
-
-            //Act
-            var response = testClient.GetAsync(url).Result;
-
-            //Assert
-            response.StatusCode.Should().NotBe(HttpStatusCode.Unauthorized);
         }
 
         [Fact]
@@ -71,29 +52,13 @@ namespace AwesomeBankAPI.Test
             GetAuthenticate();
 
             //Act
-            var response = testClient.GetAsync("https://localhost/api/account/" + testAccount1.Id).Result;
+            var response = testClient.GetAsync("https://localhost/api/account/" + testAccount1.Iban).Result;
 
             //Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             var account = JsonConvert.DeserializeObject<Account>(response.Content.ReadAsStringAsync().Result);
             account.Id.Should().Be(testAccount1.Id);
             GetAnonymous();
-        }
-
-        [Fact]
-        public void GetAccount_WithoutParameter_ReturnOKAndAccountList()
-        {
-            //Arrange
-            GetAuthenticate();
-
-            //Act
-            var response = testClient.GetAsync("https://localhost/api/account/").Result;
-
-            //Assert
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var accounts = JsonConvert.DeserializeObject<IEnumerable<Account>>(response.Content.ReadAsStringAsync().Result);
-            accounts.Should().Contain(testAccount1);
-            accounts.Should().Contain(testAccount2);
         }
 
         [Fact]
@@ -109,6 +74,7 @@ namespace AwesomeBankAPI.Test
 
             //Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
+            GetAnonymous();
         }
 
         [Fact]
@@ -124,6 +90,7 @@ namespace AwesomeBankAPI.Test
 
             //Assert
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            GetAnonymous();
         }
 
         [Theory]
@@ -156,6 +123,7 @@ namespace AwesomeBankAPI.Test
             var getaccount = testClient.GetAsync("https://localhost/api/account/" + testAccount1.Iban).Result;
             var account = JsonConvert.DeserializeObject<Account>(getaccount.Content.ReadAsStringAsync().Result);
             account.BalanceAmount.Should().Be(expected);
+            GetAnonymous();
         }
 
         [Theory]
@@ -182,7 +150,7 @@ namespace AwesomeBankAPI.Test
             testClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             //Act
-            var response = testClient.PostAsync("https://localhost/api/account/deposit", postContent).Result;
+            var response = testClient.PostAsync("https://localhost/api/account/transfer", postContent).Result;
 
             //Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -191,8 +159,9 @@ namespace AwesomeBankAPI.Test
             var senderAccount = JsonConvert.DeserializeObject<Account>(getSenderAccount.Content.ReadAsStringAsync().Result);
             var receiverAccount = JsonConvert.DeserializeObject<Account>(getReceiverAccount.Content.ReadAsStringAsync().Result);
 
-            senderAccount.BalanceAmount.Should().Be(expectedReceiverBalance);
-            receiverAccount.BalanceAmount.Should().Be(expectedSenderBalance);
+            senderAccount.BalanceAmount.Should().Be(expectedSenderBalance);
+            receiverAccount.BalanceAmount.Should().Be(expectedReceiverBalance);
+            GetAnonymous();
         }
     }
 }
