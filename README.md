@@ -4,6 +4,8 @@ A simple banking systems implemented using ASP.Net Core 3.1
 
 ## Prerequisite
 - OpenSsl
+- dotnet cli
+- Entity Framework Core tools
 
 ## To run the project
  1. Generate private key using OpenSsl by following command:
