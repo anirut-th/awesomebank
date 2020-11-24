@@ -5,7 +5,7 @@ A simple banking systems implemented using ASP.Net Core 3.1
 ## Prerequisite
 - OpenSsl
 
-## Installation
+## To run the project
  1. Generate private key using OpenSsl by following command:
 	```
 	openssl genrsa 2048 > private.key
@@ -54,4 +54,12 @@ A simple banking systems implemented using ASP.Net Core 3.1
 	```
 	dotnet run
 	```	
-	You can go to https://localhost:5001/swagger to check it out. To run the test please checkout ```develop-test``` branch.
+	You can go to https://localhost:5001/swagger to check it out.
+	
+
+### To test the project
+ 1. checkout ```develop-test``` branch.
+ 2. From root directory of project AwesomeBankAPI.Test Run command:
+	```
+	dotnet test
+	```
